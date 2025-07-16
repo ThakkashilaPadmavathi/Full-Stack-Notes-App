@@ -10,7 +10,7 @@ const AddEditNotes = ({ onClose, noteData, type, getAllNotes }) => {
   const [tags, setTags] = useState(noteData?.tags || [])
   const [error, setError] = useState(null)
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL
+  const BACKEND_URL = import.meta.env.VITE_API_URL
 
   // Edit Note
   const editNote = async () => {
