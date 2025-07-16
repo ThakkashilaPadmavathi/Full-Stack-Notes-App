@@ -1,56 +1,45 @@
-import express from "express"
-import mongoose from "mongoose"
-import dotenv from "dotenv"
-import cookieParser from "cookie-parser"
-import cors from "cors"
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import cookieParser from "cookie-parser";
+import dotenv from "dotenv";
 
-dotenv.config()
+// Import your routes here
+import authRoutes from "./routes/auth.route.js";
+import noteRoutes from "./routes/note.route.js";
+
+dotenv.config();
+
+const app = express();
+
 const allowedOrigins = [
-  "http://localhost:3000", // for development
-  "https://your-frontend-url.vercel.app" // for production
+  "http://localhost:3000",
+  "https://your-frontend-url.vercel.app"
 ];
 
 app.use(cors({
   origin: allowedOrigins,
   credentials: true
 }));
+
+app.use(express.json());
+app.use(cookieParser());
+
+// Mount routes
+app.use("/api/auth", authRoutes);
+app.use("/api/notes", noteRoutes);
+
+// MongoDB connection
 mongoose
-  .connect(process.env.MONGO_URI
-)
+  .connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("Connected to mongoDB")
+    console.log("✅ Connected to MongoDB");
   })
   .catch((err) => {
-    console.log(err)
-  })
-
-const app = express()
-
-// to make input as json
-app.use(express.json())
-app.use(cookieParser())
+    console.error("❌ MongoDB connection error:", err);
+  });
 
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
-
-// import routes
-import authRouter from "./routes/auth.route.js"
-import noteRouter from "./routes/note.route.js"
-
-app.use("/api/auth", authRouter)
-app.use("/api/note", noteRouter)
-
-// error handling
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500
-  const message = err.message || "Internal Serer Error"
-
-  return res.status(statusCode).json({
-    success: false,
-    statusCode,
-    message,
-  })
-})
