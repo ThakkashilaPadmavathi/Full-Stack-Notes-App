@@ -14,7 +14,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://your-frontend-url.vercel.app"
+  "https://full-stack-notes-app-brown.vercel.app"
 ];
 
 app.use(cors({
