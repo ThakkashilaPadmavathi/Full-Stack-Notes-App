@@ -33,22 +33,19 @@ const Login = () => {
     }
 
     setError("")
-
-    // Login API
+    dispatch(signInStart())
 
     try {
-      dispatch(signInStart())
-
       const res = await axios.post(
-        "http://localhost:3000/api/auth/signin",
+        `${import.meta.env.VITE_API_URL}/auth/signin`,
         { email, password },
         { withCredentials: true }
       )
 
       if (res.data.success === false) {
         toast.error(res.data.message)
-        console.log(res.data)
-        dispatch(signInFailure(data.message))
+        dispatch(signInFailure(res.data.message))
+        return
       }
 
       toast.success(res.data.message)
